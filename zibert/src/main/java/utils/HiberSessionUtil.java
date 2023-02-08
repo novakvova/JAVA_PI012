@@ -1,5 +1,7 @@
 package utils;
 
+import models.Question;
+import models.QuestionItem;
 import models.Role;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -14,6 +16,8 @@ public class HiberSessionUtil {
             try{
                 Configuration configuration = new Configuration().configure();
                 configuration.addAnnotatedClass(Role.class);
+                configuration.addAnnotatedClass(Question.class);
+                configuration.addAnnotatedClass(QuestionItem.class);
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                         .applySettings(configuration.getProperties());
                 sessionFactory = configuration.buildSessionFactory();
