@@ -14,8 +14,23 @@ public class Main {
         //RoleWorks();
         //addQuestion();
         //showQuestions();
-        addUserRole();
+        //addUserRole();
+        showUserInfo();
     }
+    private static void showUserInfo() {
+        Session context = HiberSessionUtil.getSessionFactory().openSession();
+        Query query = context.createQuery("FROM User");
+        List<User> users = query.list();
+        for (User user: users) {
+            System.out.println("User "+ user.getFirstName()+ " "+ user.getLastName());
+            var roles = user.getUserRoles();
+            for (UserRole ur : roles) {
+                System.out.println("Role - "+ur.getRole().getName());
+            }
+        }
+        context.close();
+    }
+
 
     private static void addUserRole() {
         Session context = HiberSessionUtil.getSessionFactory().openSession();

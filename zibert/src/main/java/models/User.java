@@ -4,6 +4,7 @@ package models;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -26,4 +27,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<UserRole> userRoles;
 
+    public User() {
+        userRoles = new ArrayList<>();
+    }
 }
