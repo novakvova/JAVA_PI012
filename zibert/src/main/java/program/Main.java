@@ -1,8 +1,6 @@
 package program;
 
-import models.Question;
-import models.QuestionItem;
-import models.Role;
+import models.*;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
@@ -15,7 +13,24 @@ public class Main {
     public static void main(String[] args) {
         //RoleWorks();
         //addQuestion();
-        showQuestions();
+        //showQuestions();
+        addUserRole();
+    }
+
+    private static void addUserRole() {
+        Session context = HiberSessionUtil.getSessionFactory().openSession();
+        Transaction tx = context.beginTransaction();
+        User user =context.get(User.class, 1); //new User();
+        //user.setFirstName("Іван"); user.setLastName("Бегемот"); user.setPhone("+73892837843");
+        //user.setEmail("ivam@gmail.com"); user.setPassword("123456");
+        //context.save(user);
+        Role role = context.get(Role.class, 1);
+        UserRole ur = new UserRole();
+        ur.setUser(user);
+        ur.setRole(role);
+        context.save(ur);
+        tx.commit();
+        context.close();
     }
     private static void addQuestion() {
         Scanner in = new Scanner(System.in);
