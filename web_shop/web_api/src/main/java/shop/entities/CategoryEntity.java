@@ -1,6 +1,6 @@
 package shop.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
