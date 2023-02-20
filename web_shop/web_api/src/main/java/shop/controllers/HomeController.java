@@ -17,7 +17,9 @@ public class HomeController {
     private final CategoryRepository categoryRepository;
     @GetMapping("/")
     public List<CategoryEntity> index() {
+        var item = categoryRepository.findByName("Ноутбуки");
         //categoryDTOList.add(new CategoryDTO("Сало"));
+
         return categoryRepository.findAll();
     }
 }
