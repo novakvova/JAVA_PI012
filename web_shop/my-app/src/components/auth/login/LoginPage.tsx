@@ -2,6 +2,7 @@ import { FcGoogle } from "react-icons/fc";
 import { AiFillFacebook } from "react-icons/ai";
 
 import loginImg from "../../../assets/login.jpg";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   return (
@@ -42,7 +43,10 @@ const LoginPage = () => {
               <input className="mr-2" type="checkbox" />
               Remember Me
             </p>
-            <p className="text-center mt-8">Not a member? Sign up now</p>
+            <Link to="/" className="relative">
+              <p className="text-center mt-8">Not a member? Sign up now</p>
+            </Link>
+            
           </form>
         </div>
       </div>

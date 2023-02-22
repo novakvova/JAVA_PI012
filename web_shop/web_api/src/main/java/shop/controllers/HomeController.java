@@ -1,25 +1,36 @@
 package shop.controllers;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import shop.dto.CategoryDTO;
-import shop.entities.CategoryEntity;
-import shop.repositories.CategoryRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import shop.dto.UploadImageDto;
+import shop.storage.StorageService;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 
 @RestController
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class HomeController {
-    //private static List<CategoryDTO> categoryDTOList = new ArrayList<>();
-    private final CategoryRepository categoryRepository;
-    @GetMapping("/")
-    public List<CategoryEntity> index() {
-        var item = categoryRepository.findByName("Ноутбуки");
-        //categoryDTOList.add(new CategoryDTO("Сало"));
+    private final StorageService storageService;
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public ResponseEntity<Resource> serverfile(@PathVariable String filename) throws Exception {
+        Resource file = storageService.loadAsResource(filename);
+        String urlFileName = URLEncoder.encode("Це прикольна дівчина.jpg", StandardCharsets.UTF_8);
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG)
+                .header(HttpHeaders.CONTENT_DISPOSITION, "filename=\""+urlFileName+"\"")
+                .body(file);
+    }
 
-        return categoryRepository.findAll();
+    @PostMapping("/upload")
+    public String upload(@RequestBody UploadImageDto dto) {
+        String filename = storageService.save(dto.getBase64());
+        return filename;
     }
 }
