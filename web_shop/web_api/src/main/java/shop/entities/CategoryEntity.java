@@ -12,4 +12,6 @@ public class CategoryEntity {
     private int id;
     @Column(length = 500, nullable = false)
     private String name;
+    @Column(length = 300)
+    private String image;
 }
