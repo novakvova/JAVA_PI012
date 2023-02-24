@@ -24,7 +24,8 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<CategoryItemDTO>> index() {
-        var list = categoryMapper.categoryItemDTOList(categoryRepository.findAll());
+        var data = categoryRepository.findAll();
+        var list = categoryMapper.categoryItemDTOList(data);
 
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
