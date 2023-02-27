@@ -30,7 +30,7 @@ public class CategoryController {
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<CategoryEntity> create(CategoryCreateDTO model) {
+    public ResponseEntity<CategoryEntity> create(@RequestBody CategoryCreateDTO model) {
         var file = storageService.save(model.getBase64());
         var category = categoryMapper.categoryEntityByCategoryCreateDTO(model);
         category.setImage(file);
