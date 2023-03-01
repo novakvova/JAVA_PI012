@@ -34,6 +34,7 @@ const CategoryCreatePage = () => {
     //setModel({...model, [e.target.name]: e.target.value});
   }
 
+
   const onSubmitHandler= async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -181,8 +182,8 @@ const CategoryCreatePage = () => {
             </button>
             <button className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50">
               Cancel
-            </button>{" "}
-          </div>{" "}
+            </button>
+          </div>
         </form>
       </div>
     </>

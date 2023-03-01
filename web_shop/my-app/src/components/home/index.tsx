@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { ICategoryItem } from "./types";
 
 
@@ -20,7 +21,7 @@ const Home = () => {
       <div key={category.id} className="group relative">
         <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
           <img
-            src={"http://localhost:8081/files/"+category.image}
+            src={"http://localhost:8081/files/600_"+category.image}
             alt={category.name}
             className="h-full w-full object-cover object-center"
           />
@@ -41,7 +42,9 @@ const Home = () => {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
           <h2 className="text-2xl font-bold text-gray-900">Collections</h2>
-
+          <Link to="/categories/create" className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50">
+            Додати
+          </Link>
           <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
             {content}
           </div>
