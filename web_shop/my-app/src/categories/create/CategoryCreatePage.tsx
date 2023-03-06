@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 import { ChangeEvent, ReactElement, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ICategoryCreate } from "../types";
@@ -8,7 +8,7 @@ const CategoryCreatePage = () => {
   const [model, setModel] = useState<ICategoryCreate>({
     name: "",
     description: "",
-    base64: "",
+    file: null,
   });
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
@@ -21,13 +21,14 @@ const CategoryCreatePage = () => {
     const {files} = target;
     if(files) {
         const file = files[0];
-        const fileReader = new FileReader(); 
-        fileReader.readAsDataURL(file);
-        fileReader.onload=(e) =>{
-            const result = e.target?.result as string;
-            console.log("Read all bytes", );
-            setModel({...model, base64: result});
-        };
+        setModel({...model, file});
+        // const fileReader = new FileReader(); 
+        // fileReader.readAsDataURL(file);
+        // fileReader.onload=(e) =>{
+        //     const result = e.target?.result as string;
+        //     console.log("Read all bytes", );
+        //     setModel({...model, base64: result});
+        // };
     }
     
     target.value="";
@@ -38,20 +39,20 @@ const CategoryCreatePage = () => {
   const onSubmitHandler= async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-        const result = await axios.post("http://localhost:8081/api/categories", model);
+        const result = await axios.post("http://localhost:8081/api/categories", model,
+        { 
+          headers: {"Content-Type": "multipart/form-data"}
+        });
         navigator("/");
-
-    }catch(e: any) {
+    } catch(e: any) {
 
     }
     
   }
 
   return (
-    <>
-      <div className="p-8 rounded border border-gray-200">
+    <div className="mx-auto max-w-7xl px-6">
         <h1 className="font-medium text-3xl">Додати категорію</h1>
-
         <form onSubmit={onSubmitHandler}>
           <div className="mt-8 grid lg:grid-cols-1 gap-4">
             <div>
@@ -100,7 +101,7 @@ const CategoryCreatePage = () => {
                   htmlFor="selectImage"
                   className="inline-block w-20 overflow-hidden bg-gray-100"
                 >
-                  {model.base64 === "" ? (
+                  {model.file === null ? (
                     <svg
                       className="h-full w-full text-gray-300"
                       fill="currentColor"
@@ -109,7 +110,7 @@ const CategoryCreatePage = () => {
                       <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
                   ) : (
-                    <img src={model.base64} />
+                    <img src={URL.createObjectURL(model.file)} />
                   )}
                 </label>
                 <label
@@ -185,8 +186,7 @@ const CategoryCreatePage = () => {
             </button>
           </div>
         </form>
-      </div>
-    </>
+    </div>
   );
 };
 
