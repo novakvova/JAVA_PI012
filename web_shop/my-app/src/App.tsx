@@ -6,7 +6,8 @@ import Home from './components/home';
 import DefaultLayout from './components/containers/default';
 import LoginPage from './components/auth/login';
 import NotFoundPage from './components/notFound';
-import CategoryCreatePage from './categories/create';
+import CategoryCreatePage from './components/categories/create';
+import ProductCreatePage from './components/products/create';
 
 function App() {
   return (
@@ -16,6 +17,8 @@ function App() {
         <Route index element={<Home/> }/>
         <Route path="login" element={<LoginPage/> }/>
         <Route path="categories/create" element={<CategoryCreatePage/> }/>
+
+        <Route path="products/create" element={<ProductCreatePage/> }/>
 
         <Route path="*" element={<NotFoundPage/> }/>
       </Route>

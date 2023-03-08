@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { APP_ENV } from "../../env";
 import { ICategoryItem } from "./types";
 
 
@@ -9,7 +10,7 @@ const Home = () => {
   const [list, setList] = useState<Array<ICategoryItem>>([]);
 
     useEffect(() => {
-         axios.get<Array<ICategoryItem>>("http://localhost:8081/api/categories").then(resp => {
+         axios.get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`).then(resp => {
             console.log("resp = ", resp);
             setList(resp.data);
          });
@@ -21,7 +22,7 @@ const Home = () => {
       <div key={category.id} className="group relative">
         <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
           <img
-            src={"http://localhost:8081/files/600_"+category.image}
+            src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${category.image}`}
             alt={category.name}
             className="h-full w-full object-cover object-center"
           />
