@@ -3,11 +3,13 @@ package shop.services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import shop.dto.product.ProductCreateDTO;
+import shop.dto.product.ProductEditDTO;
 import shop.dto.product.ProductItemDTO;
 import shop.entities.CategoryEntity;
 import shop.entities.ProductEntity;
 import shop.entities.ProductImageEntity;
 import shop.iterfaces.ProductService;
+import shop.mapper.ProductMapper;
 import shop.repositories.ProductImageRepository;
 import shop.repositories.ProductRepository;
 import shop.storage.StorageService;
@@ -23,6 +25,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final ProductImageRepository productImageRepository;
     private final StorageService storageService;
+    private final ProductMapper productMapper;
     @Override
     public ProductItemDTO create(ProductCreateDTO model) {
         var p = new ProductEntity();
@@ -51,6 +54,52 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public ProductItemDTO edit(int id, ProductEditDTO model) {
+        var p = productRepository.findById(id);
+        if(p.isPresent())
+        {
+            var product = p.get();
+            for (var name: model.getRemoveFiles()) {
+               var pi = productImageRepository.findByName(name);
+               if(pi!=null)
+               {
+                   productImageRepository.delete(pi);
+                   storageService.removeFile(name);
+               }
+            }
+            var cat = new CategoryEntity();
+            cat.setId(model.getCategory_id());
+            product.setName(model.getName());
+            product.setDescription(model.getDescription());
+            product.setPrice(model.getPrice());
+            product.setDateCreated(new Date());
+            product.setCategory(cat);
+            productRepository.save(product);
+            var productImages = product.getProductImages();
+            int priority=1;
+            for (var pi : productImages)
+            {
+                if(pi.getPriority()>priority)
+                    priority=pi.getPriority();
+            }
+            priority++;
+            for (var img : model.getFiles()) {
+                var file = storageService.saveMultipartFile(img);
+                ProductImageEntity pi = new ProductImageEntity();
+                pi.setName(file);
+                pi.setDateCreated(new Date());
+                pi.setPriority(priority);
+                pi.setDelete(false);
+                pi.setProduct(product);
+                productImageRepository.save(pi);
+                priority++;
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public List<ProductItemDTO> get() {
         var list = new ArrayList<ProductItemDTO>();
         var data = productRepository.findAll();
@@ -72,5 +121,19 @@ public class ProductServiceImpl implements ProductService {
             list.add(productItemDTO);
         }
         return list;
+    }
+
+    @Override
+    public ProductItemDTO getById(int id) {
+        var productOptinal = productRepository.findById(id);
+        if(productOptinal.isPresent())
+        {
+            var product = productOptinal.get();
+            var data =  productMapper.ProductItemDTOByProduct(product);
+            for(var img : product.getProductImages())
+                data.getFiles().add(img.getName());
+            return data;
+        }
+        return null;
     }
 }
