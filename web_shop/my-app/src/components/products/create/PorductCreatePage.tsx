@@ -1,7 +1,8 @@
 import axios from "axios";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { APP_ENV } from "../../../env";
+import { ICategoryItem } from "../../home/types";
 import { IPorductCreate } from "../types";
 
 const ProductCreatePage = () => {
@@ -13,6 +14,20 @@ const ProductCreatePage = () => {
     description: "",
     files: [],
   });
+  const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
+
+  useEffect(() => {
+    axios
+      .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
+      .then((resp) => {
+        console.log("resp = ", resp);
+        setCategories(resp.data);
+      });
+  }, []);
+
+  const content = categories.map((category) => (
+    <option key={category.id} value={category.id}>{category.name}</option>
+  ));
 
   const onChangeHandler = (
     e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>
@@ -21,12 +36,18 @@ const ProductCreatePage = () => {
     setModel({ ...model, [e.target.name]: e.target.value });
   };
 
+  const onChangeSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+    //console.log("input", e.target);
+    //console.log("input", e.target.value);
+    setModel({ ...model, [e.target.name]: e.target.value });
+  };
+
   const onFileChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     //console.log("files", e.target.files);
     const { target } = e;
     if (target.files) {
       const file = target.files[0];
-      setModel({...model, files: [...model.files, file]});
+      setModel({ ...model, files: [...model.files, file] });
     }
   };
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -43,7 +64,7 @@ const ProductCreatePage = () => {
     } catch (e: any) {}
   };
 
-  const filesContent = model.files.map((f, index)=> (
+  const filesContent = model.files.map((f, index) => (
     <img key={index} src={URL.createObjectURL(f)} />
   ));
   return (
@@ -88,12 +109,13 @@ const ProductCreatePage = () => {
           </div>
 
           <div>
-            <label
+            {/* <label
               htmlFor="category_id"
               className="text-sm text-gray-700 block mb-1 font-medium"
             >
               Категорія
             </label>
+
             <input
               type="number"
               name="category_id"
@@ -102,7 +124,23 @@ const ProductCreatePage = () => {
               id="category_id"
               className="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full"
               placeholder="Вкажіть id категорії"
-            />
+            /> */}
+
+            <label
+              htmlFor="countries"
+              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Оберіть категорію
+            </label>
+            <select
+              onChange={onChangeSelectHandler}
+              id="category_id"
+              name="category_id"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            >
+              <option selected>Виберіть категорію</option>
+              {content}
+            </select>
           </div>
 
           <div>
@@ -153,7 +191,6 @@ const ProductCreatePage = () => {
               className="hidden"
             />
           </div>
- 
         </div>
         <div className="space-x-4 mt-8">
           <button

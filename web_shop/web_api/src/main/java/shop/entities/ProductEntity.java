@@ -1,8 +1,11 @@
 package shop.entities;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name="tbl_products")
+@Table(name = "tbl_products")
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +28,13 @@ public class ProductEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateCreated;
     private boolean isDelete;
-    @ManyToOne
-    @JoinColumn(name="category_id", nullable = false)
+    //    @ManyToOne
+//    @JoinColumn(name="category_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private CategoryEntity category;
 
-    @OneToMany(mappedBy="product")
-    private List<ProductImageEntity> productImages=new ArrayList<>();
+    @OneToMany(mappedBy = "product")
+    private List<ProductImageEntity> productImages = new ArrayList<>();
 }

@@ -5,3 +5,10 @@ export interface IPorductCreate {
     category_id: string,
     files: Array<File>
 }
+
+export interface IProductItem {
+    id: number,
+    name: string,
+    files: string[],
+    description: string
+}

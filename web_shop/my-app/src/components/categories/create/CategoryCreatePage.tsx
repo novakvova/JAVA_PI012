@@ -1,15 +1,19 @@
 import axios from "axios";
-import { ChangeEvent, ReactElement, useState } from "react";
+import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { APP_ENV } from "../../../env";
+import { ICategoryItem } from "../../home/types";
 import { ICategoryCreate } from "../types";
 
 const CategoryCreatePage = () => {
-    const navigator = useNavigate();
+  const navigator = useNavigate();
   const [model, setModel] = useState<ICategoryCreate>({
     name: "",
     description: "",
     file: null,
   });
+
+
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>) => {
     //console.log("input", e.target);

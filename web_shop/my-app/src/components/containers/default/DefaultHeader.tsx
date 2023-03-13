@@ -197,10 +197,10 @@ function classNames(...classes: any) {
               </Popover>
 
               <Link
-                to="/products/create"
+                to="/products/list"
                 className="text-base font-medium text-gray-500 hover:text-gray-900"
               >
-                Додати товар
+                Товари
               </Link>
               <a
                 href="#"

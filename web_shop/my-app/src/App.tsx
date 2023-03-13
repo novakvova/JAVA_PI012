@@ -8,6 +8,7 @@ import LoginPage from './components/auth/login';
 import NotFoundPage from './components/notFound';
 import CategoryCreatePage from './components/categories/create';
 import ProductCreatePage from './components/products/create';
+import ProductListPage from './components/products/list';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route path="categories/create" element={<CategoryCreatePage/> }/>
 
         <Route path="products/create" element={<ProductCreatePage/> }/>
+        <Route path="products/list" element={<ProductListPage/> }/>
 
         <Route path="*" element={<NotFoundPage/> }/>
       </Route>
