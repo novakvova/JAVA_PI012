@@ -14,27 +14,37 @@ const ProductListPage = () => {
         console.log("resp = ", resp);
         setList(resp.data);
       });
+
+      
   }, []);
   console.log("List data: ", list);
 
   const content = list.map((p) => (
-    <div key={p.id} className="group relative">
-      <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
-        <img
-          src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${p.files[0]}`}
-          alt={p.name}
-          className="h-full w-full object-cover object-center"
-        />
+    <div key={p.id}>
+      <div className="group relative">
+        <div className="relative h-80 w-full overflow-hidden rounded-lg bg-white group-hover:opacity-75 sm:aspect-w-2 sm:aspect-h-1 sm:h-64 lg:aspect-w-1 lg:aspect-h-1">
+          <img
+            src={`${APP_ENV.REMOTE_HOST_NAME}files/600_${p.files[0]}`}
+            alt={p.name}
+            className="h-full w-full object-cover object-center"
+          />
+        </div>
+        <h3 className="mt-6 text-sm text-gray-500">
+          <a href="#">
+            <span className="absolute inset-0" />
+            {p.name}
+          </a>
+        </h3>
+        <p className="text-base font-semibold text-gray-900">{p.description}</p>
       </div>
-      <h3 className="mt-6 text-sm text-gray-500">
-        <a href="#">
-          <span className="absolute inset-0" />
-          {p.name}
-        </a>
-      </h3>
-      <p className="text-base font-semibold text-gray-900">
-        {p.description}
-      </p>
+      <div className="mt-2">
+        <Link
+          to={"/products/edit/" + p.id}
+          className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
+        >
+          Змінить
+        </Link>
+      </div>
     </div>
   ));
 
