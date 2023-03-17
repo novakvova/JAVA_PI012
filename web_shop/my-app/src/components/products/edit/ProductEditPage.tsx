@@ -162,7 +162,7 @@ const ProductEditPage = () => {
               Оберіть категорію
             </label>
             <select
-              defaultValue={model.category_id}
+              value={model.category_id}
               onChange={onChangeSelectHandler}
               id="category_id"
               name="category_id"

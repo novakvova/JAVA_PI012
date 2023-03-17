@@ -136,4 +136,12 @@ public class ProductServiceImpl implements ProductService {
         }
         return null;
     }
+
+    @Override
+    public void delete(int id) {
+        ProductEntity product = productRepository.findById(id).get();
+        for(var img : product.getProductImages())
+            storageService.removeFile(img.getName());;
+        productRepository.deleteById(id);
+    }
 }
