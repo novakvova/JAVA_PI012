@@ -16,10 +16,11 @@ export interface IPorductEdit {
 }
 
 export interface IProductItem {
-    id: number,
+    id: number|string|undefined,
     name: string,
     price: number,
     category_id: string,
+    category: string,
     files: string[],
     description: string
 }

@@ -20,7 +20,7 @@ const ProductListPage = () => {
   }, []);
   console.log("List data: ", list);
 
-  const DeleteProductHandler = (id: number) => {
+  const DeleteProductHandler = (id: number|string|undefined) => {
     axios.delete(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
       .then(resp =>{
         setList(list.filter(x=>x.id!==id));

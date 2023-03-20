@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FaTrash } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import { APP_ENV } from "../../../env";
 import { ICategoryItem } from "../../home/types";
 import { IPorductCreate } from "../types";
@@ -26,7 +27,9 @@ const ProductCreatePage = () => {
   }, []);
 
   const content = categories.map((category) => (
-    <option key={category.id} value={category.id}>{category.name}</option>
+    <option key={category.id} value={category.id}>
+      {category.name}
+    </option>
   ));
 
   const onChangeHandler = (
@@ -49,6 +52,7 @@ const ProductCreatePage = () => {
       const file = target.files[0];
       setModel({ ...model, files: [...model.files, file] });
     }
+    e.target.value="";
   };
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -65,7 +69,29 @@ const ProductCreatePage = () => {
   };
 
   const filesContent = model.files.map((f, index) => (
-    <img key={index} src={URL.createObjectURL(f)} />
+    <div key={index} className="mb-4">
+      <Link
+        to="#"
+        onClick={(e) => {
+          e.preventDefault();
+          setModel({ ...model, files: model.files.filter((x) => x !== f) });
+          console.log("click delete", f);
+        }}
+      >
+        <FaTrash className="m-2 " />
+      </Link>
+      <div className="relative">
+        <div style={{ height: "150px" }}>
+          <div className="picture-main">
+            <img
+              src={URL.createObjectURL(f)}
+              className="picture-container"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   ));
   return (
     <div className="mx-auto max-w-7xl px-6">
@@ -109,23 +135,6 @@ const ProductCreatePage = () => {
           </div>
 
           <div>
-            {/* <label
-              htmlFor="category_id"
-              className="text-sm text-gray-700 block mb-1 font-medium"
-            >
-              Категорія
-            </label>
-
-            <input
-              type="number"
-              name="category_id"
-              value={model.category_id}
-              onChange={onChangeHandler}
-              id="category_id"
-              className="bg-gray-100 border border-gray-200 rounded py-1 px-3 block focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-full"
-              placeholder="Вкажіть id категорії"
-            /> */}
-
             <label
               htmlFor="countries"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -162,17 +171,14 @@ const ProductCreatePage = () => {
           </div>
 
           <div>
+            <div className="grid lg:grid-cols-8 md:grid-cols-6 sm:grid-cols-4 grid-cols-2 items-center gap-4">
+              {filesContent}
+            </div>
             <label className="block text-sm font-medium text-gray-700">
               Фото
             </label>
 
             <div className="mt-1 flex items-center">
-              <label
-                htmlFor="selectImage"
-                className="inline-block w-20 overflow-hidden bg-gray-100"
-              >
-                {filesContent}
-              </label>
               <label
                 htmlFor="selectImage"
                 className="ml-5 rounded-md border border-gray-300 bg-white 
