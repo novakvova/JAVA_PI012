@@ -35,6 +35,7 @@ public class SecurityConfiguration {
                 .requestMatchers("/webjars/**").permitAll()
                 .requestMatchers("/rest-api-docs/**").permitAll()
                 .requestMatchers("/swagger-ui/**").permitAll()
+                .requestMatchers("/api/categories/**").permitAll()
                 .anyRequest().authenticated()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
