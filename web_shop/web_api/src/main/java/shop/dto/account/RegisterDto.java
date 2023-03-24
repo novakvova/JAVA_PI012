@@ -1,4 +1,4 @@
-package shop.auth;
+package shop.dto.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationRequest {
-
+public class RegisterDto {
+    private String firstname;
+    private String lastname;
     private String email;
-    String password;
+    private String password;
 }
-

@@ -1,4 +1,4 @@
-package shop.auth;
+package shop.dto.account;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class AuthResponseDto {
 
     private String token;
 }
-
