@@ -1,4 +1,5 @@
 export interface ILoginPage {
     email: string,
-    password: string
+    password: string,
+    reCaptchaToken: string
 } ;

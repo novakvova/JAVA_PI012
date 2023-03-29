@@ -5,12 +5,19 @@ import { Link } from "react-router-dom";
 import { ILoginPage } from "../types";
 import * as yup from "yup";
 import { useFormik } from "formik";
+import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
+import axios from "axios";
+import { APP_ENV } from "../../../env";
 
 
 const LoginPage = () => {
+
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
   const initValues : ILoginPage ={
     email: "",
-    password: ""
+    password: "",
+    reCaptchaToken: ""
   };
 
   const loginSchema = yup.object({
@@ -18,8 +25,22 @@ const LoginPage = () => {
     password: yup.string().required("Поле не повинне бути пустим"),
   });
 
-  const onSubmitFormik =(values: ILoginPage) => {
-    console.log("Login form: ", values);
+  const onSubmitFormik = async (values: ILoginPage) => {
+    try {
+      if(!executeRecaptcha)
+        return;
+      //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
+      values.reCaptchaToken=await executeRecaptcha();
+
+      const data = await axios.post(
+        `${APP_ENV.REMOTE_HOST_NAME}account/login`,
+        values
+      );
+      console.log("Login user token", data);
+      //navigator("/");
+    } catch (error: any) {
+      console.log("Щось пішло не так", error);
+    }
   }
 
   const formik = useFormik({
