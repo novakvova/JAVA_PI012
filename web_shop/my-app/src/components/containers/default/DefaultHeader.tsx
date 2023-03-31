@@ -16,6 +16,9 @@ import {
 } from "@heroicons/react/24/outline";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { AuthUserActionType, IAuthUser } from "../../auth/types";
+import { useDispatch } from "react-redux";
 
 const solutions = [
   {
@@ -94,52 +97,61 @@ const recentPosts = [
   { id: 3, name: "Improve your customer experience", href: "#" },
 ];
 
-
 function classNames(...classes: any) {
-    return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(" ");
+}
+const DefaultHeader = () => {
+  const { isAuth, user } = useSelector((store: any) => store.auth as IAuthUser);
+  const dispatch = useDispatch();
+
+  const LogoutUser= (e: any) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    dispatch({
+      type: AuthUserActionType.LOGOUT_USER
+    });
   }
-  const DefaultHeader = () => {
-    return (
-      <>
-        <Popover className="relative bg-white" style={{zIndex:100}}>
-          <div className="mx-auto max-w-7xl px-6">
-            <div className="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
-              <div className="flex justify-start lg:w-0 lg:flex-1">
-                <Link to="/">
-                  <span className="sr-only">Your Company</span>
-                  <img
-                    className="h-8 w-auto sm:h-10"
-                    src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                    alt=""
-                  />
-                </Link>
-              </div>
-              <div className="-my-2 -mr-2 md:hidden">
-                <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
-                  <span className="sr-only">Open menu</span>
-                  <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-                </Popover.Button>
-              </div>
-              <Popover.Group as="nav" className="hidden space-x-10 md:flex">
-                <Popover className="relative">
-                  {({ open }) => (
-                    <>
-                      <Popover.Button
+  return (
+    <>
+      <Popover className="relative bg-white" style={{ zIndex: 100 }}>
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="flex items-center justify-between border-b-2 border-gray-100 py-6 md:justify-start md:space-x-10">
+            <div className="flex justify-start lg:w-0 lg:flex-1">
+              <Link to="/">
+                <span className="sr-only">Your Company</span>
+                <img
+                  className="h-8 w-auto sm:h-10"
+                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+                  alt=""
+                />
+              </Link>
+            </div>
+            <div className="-my-2 -mr-2 md:hidden">
+              <Popover.Button className="inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                <span className="sr-only">Open menu</span>
+                <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              </Popover.Button>
+            </div>
+            <Popover.Group as="nav" className="hidden space-x-10 md:flex">
+              <Popover className="relative">
+                {({ open }) => (
+                  <>
+                    <Popover.Button
+                      className={classNames(
+                        open ? "text-gray-900" : "text-gray-500",
+                        "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      )}
+                    >
+                      <span>Solutions</span>
+                      <ChevronDownIcon
                         className={classNames(
-                          open ? "text-gray-900" : "text-gray-500",
-                          "group inline-flex items-center rounded-md bg-white text-base font-medium hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          open ? "text-gray-600" : "text-gray-400",
+                          "ml-2 h-5 w-5 group-hover:text-gray-500"
                         )}
-                      >
-                        <span>Solutions</span>
-                        <ChevronDownIcon
-                          className={classNames(
-                            open ? "text-gray-600" : "text-gray-400",
-                            "ml-2 h-5 w-5 group-hover:text-gray-500"
-                          )}
-                          aria-hidden="true"
-                        />
-                      </Popover.Button>
-                      
+                        aria-hidden="true"
+                      />
+                    </Popover.Button>
+
                     <Transition
                       as={Fragment}
                       enter="transition ease-out duration-200"
@@ -286,7 +298,7 @@ function classNames(...classes: any) {
                                 href="#"
                                 className="font-medium text-indigo-600 hover:text-indigo-500"
                               >
-                                  View all posts
+                                View all posts
                                 <span aria-hidden="true"> &rarr;</span>
                               </a>
                             </div>
@@ -298,19 +310,39 @@ function classNames(...classes: any) {
                 )}
               </Popover>
             </Popover.Group>
+
             <div className="hidden items-center justify-end md:flex md:flex-1 lg:w-0">
-              <Link
-                to="login"
-                className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-              >
-                Вхід
-              </Link>
-              <a
-                href="#"
-                className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
-              >
-                Sign up
-              </a>
+              {isAuth ? (
+                <>
+                  <Link
+                    to="/profile"
+                    className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                  >
+                    {user?.email}
+                  </Link>
+                  <Link to="#"
+                    onClick={LogoutUser}
+                    className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                  >
+                    Вихід
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                  >
+                    Вхід
+                  </Link>
+                  <a
+                    href="#"
+                    className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
+                  >
+                    Sign up
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

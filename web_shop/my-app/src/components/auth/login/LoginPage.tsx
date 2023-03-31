@@ -1,16 +1,22 @@
 import { FcGoogle } from "react-icons/fc";
 
 import loginImg from "../../../assets/login.jpg";
-import { Link } from "react-router-dom";
-import { ILoginPage } from "../types";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthUserActionType, IAuthResponse, IAuthUser, ILoginPage, IUser } from "../types";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useGoogleReCaptcha } from "react-google-recaptcha-v3";
 import axios from "axios";
 import { APP_ENV } from "../../../env";
+import jwtDecode from "jwt-decode";
+import { useSelector, useDispatch } from "react-redux";
 
 
 const LoginPage = () => {
+
+  const navigator = useNavigate();
+  
+  const dispatch = useDispatch();
 
   const { executeRecaptcha } = useGoogleReCaptcha();
 
@@ -32,12 +38,19 @@ const LoginPage = () => {
       //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
       values.reCaptchaToken=await executeRecaptcha();
 
-      const data = await axios.post(
+      const resp = await axios.post<IAuthResponse>(
         `${APP_ENV.REMOTE_HOST_NAME}account/login`,
         values
       );
-      console.log("Login user token", data);
-      //navigator("/");
+      const { token } = resp.data;
+      const user = jwtDecode(token) as IUser;
+      dispatch({
+        type: AuthUserActionType.LOGIN_USER,
+        payload: {email: user.email, image: user.image, phone: user.phone} as IUser
+      });
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      localStorage.token = token;
+      navigator("/");
     } catch (error: any) {
       console.log("Щось пішло не так", error);
     }
