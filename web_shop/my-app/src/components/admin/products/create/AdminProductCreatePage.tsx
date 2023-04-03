@@ -2,11 +2,12 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import { APP_ENV } from "../../../env";
-import { ICategoryItem } from "../../home/types";
+import { APP_ENV } from "../../../../env";
+import http_common from "../../../../http_common";
+import { ICategoryItem } from "../../../home/types";
 import { IPorductCreate } from "../types";
 
-const ProductCreatePage = () => {
+const AdminProductCreatePage = () => {
   const navigator = useNavigate();
   const [model, setModel] = useState<IPorductCreate>({
     name: "",
@@ -18,7 +19,7 @@ const ProductCreatePage = () => {
   const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
 
   useEffect(() => {
-    axios
+    http_common
       .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
       .then((resp) => {
         console.log("resp = ", resp);
@@ -57,14 +58,14 @@ const ProductCreatePage = () => {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const result = await axios.post(
+      const result = await http_common.post(
         `${APP_ENV.REMOTE_HOST_NAME}api/products`,
         model,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      navigator("/");
+      navigator("/admin/products/list");
     } catch (e: any) {}
   };
 
@@ -214,4 +215,4 @@ const ProductCreatePage = () => {
   );
 };
 
-export default ProductCreatePage;
+export default AdminProductCreatePage;

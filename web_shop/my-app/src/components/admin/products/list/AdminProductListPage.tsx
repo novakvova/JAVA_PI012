@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { APP_ENV } from "../../../env";
-import http_common from "../../../http_common";
-import ModalDelete from "../../common/modal/delete";
+import { APP_ENV } from "../../../../env";
+import http_common from "../../../../http_common";
+import ModalDelete from "../../../common/modal/delete";
 import { IProductItem } from "../types";
 
-const ProductListPage = () => {
+const AdminProductListPage = () => {
   const [list, setList] = useState<Array<IProductItem>>([]);
 
   useEffect(() => {
@@ -50,7 +50,22 @@ const ProductListPage = () => {
         {p.description}
       </p>
       </div>
-     
+      <div className="mt-2">
+        <Link
+          to={"/admin/products/edit/" + p.id}
+          className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
+        >
+          Змінить
+        </Link>
+
+        <ModalDelete
+              id={p.id}
+              deleteFunc={DeleteProductHandler}
+              title="Видалення товара"
+              text={`Ви дійсно бажаєте видалити товар '${p.name}'?`}
+            />
+        
+      </div>
     </div>
   ));
 
@@ -60,6 +75,14 @@ const ProductListPage = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl py-16 sm:py-24 lg:max-w-none lg:py-32">
             <h2 className="text-2xl font-bold text-gray-900">Список товарів</h2>
+            <div className="mt-2">
+              <Link
+                to="/admin/products/create"
+                className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
+              >
+                Додати
+              </Link>
+            </div>
 
             <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
               {content}
@@ -72,4 +95,4 @@ const ProductListPage = () => {
   );
 };
 
-export default ProductListPage;
+export default AdminProductListPage;

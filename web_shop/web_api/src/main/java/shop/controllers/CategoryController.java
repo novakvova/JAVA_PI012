@@ -23,7 +23,7 @@ public class CategoryController {
     public ResponseEntity<List<CategoryItemDTO>> index() {
         return new ResponseEntity<>(categoryService.get(), HttpStatus.OK);
     }
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CategoryItemDTO> create(@Valid @ModelAttribute CategoryCreateDTO model) {
         var result = categoryService.create(model);
         return new ResponseEntity<>(result, HttpStatus.OK);

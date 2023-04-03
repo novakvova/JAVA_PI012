@@ -2,11 +2,12 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { APP_ENV } from "../../../env";
-import { ICategoryItem } from "../../home/types";
+import { APP_ENV } from "../../../../env";
+import http_common from "../../../../http_common";
+import { ICategoryItem } from "../../../home/types";
 import { IPorductEdit, IProductItem } from "../types";
 
-const ProductEditPage = () => {
+const AdminProductEditPage = () => {
   const navigator = useNavigate();
   const {id} = useParams();
   console.log("id", id);
@@ -25,14 +26,14 @@ const ProductEditPage = () => {
   const [categories, setCategories] = useState<Array<ICategoryItem>>([]);
 
   useEffect(() => {
-    axios
+    http_common
       .get<Array<ICategoryItem>>(`${APP_ENV.REMOTE_HOST_NAME}api/categories`)
       .then((resp) => {
         //console.log("resp = ", resp);
         setCategories(resp.data);
       });
 
-      axios
+      http_common
       .get<IProductItem>(`${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`)
       .then((resp) => {
         const {files, name, price, category_id, description} = resp.data;
@@ -72,14 +73,14 @@ const ProductEditPage = () => {
   const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const result = await axios.put(
+      const result = await http_common.put(
         `${APP_ENV.REMOTE_HOST_NAME}api/products/${id}`,
         model,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
-      navigator("/");
+      navigator("/admin/products/list");
     } catch (e: any) {}
   };
 
@@ -243,4 +244,4 @@ const ProductEditPage = () => {
   );
 };
 
-export default ProductEditPage;
+export default AdminProductEditPage;

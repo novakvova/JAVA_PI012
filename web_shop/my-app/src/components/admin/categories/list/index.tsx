@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { APP_ENV } from "../../env";
+import { APP_ENV } from "../../../../env";
 import { ICategoryItem } from "./types";
 
-const Home = () => {
+const AdminCategoriesPage = () => {
   const [list, setList] = useState<Array<ICategoryItem>>([]);
 
   useEffect(() => {
@@ -46,6 +46,14 @@ const Home = () => {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl py-10 sm:py-16 lg:max-w-none lg:py-20">
             <h2 className="text-2xl font-bold text-gray-900">Категорії</h2>
+            <div className="mt-2">
+              <Link
+                to="/admin/categories/create"
+                className="py-2 px-4 bg-white border border-gray-200 text-gray-600 rounded hover:bg-gray-100 active:bg-gray-200 disabled:opacity-50"
+              >
+                Додати
+              </Link>
+            </div>
 
             <div className="mt-6 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-6 lg:space-y-0">
               {content}
@@ -57,4 +65,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AdminCategoriesPage;

@@ -10,6 +10,9 @@ import axios from "axios";
 import { APP_ENV } from "../../../env";
 import jwtDecode from "jwt-decode";
 import { useSelector, useDispatch } from "react-redux";
+import http_common from "../../../http_common";
+import { LoginUser } from "../action";
+import { useState } from "react";
 
 
 const LoginPage = () => {
@@ -19,6 +22,8 @@ const LoginPage = () => {
   const dispatch = useDispatch();
 
   const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const [error, setError] = useState<string>("");
 
   const initValues : ILoginPage ={
     email: "",
@@ -33,28 +38,16 @@ const LoginPage = () => {
 
   const onSubmitFormik = async (values: ILoginPage) => {
     try {
-      if(!executeRecaptcha)
-        return;
-      //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот  
-      values.reCaptchaToken=await executeRecaptcha();
-
-      const resp = await axios.post<IAuthResponse>(
-        `${APP_ENV.REMOTE_HOST_NAME}account/login`,
-        values
-      );
-      const { token } = resp.data;
-      const user = jwtDecode(token) as IUser;
-      dispatch({
-        type: AuthUserActionType.LOGIN_USER,
-        payload: {email: user.email, image: user.image, phone: user.phone} as IUser
-      });
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      localStorage.token = token;
+      if (!executeRecaptcha) return;
+      //Перевірка чи пройшов перевірку гугл, користувач, чи не є він бот
+      values.reCaptchaToken = await executeRecaptcha();
+      await LoginUser(values, dispatch);
       navigator("/");
-    } catch (error: any) {
-      console.log("Щось пішло не так", error);
+    } catch (ex: any) {
+      setError("Дані вказано не вірно!");
+      console.log("Bad login user");
     }
-  }
+  };
 
   const formik = useFormik({
     initialValues: initValues,
@@ -110,6 +103,13 @@ const LoginPage = () => {
               </p>
               }
             </div>
+
+            {error && 
+              <p className="mt-2 text-sm text-red-600 dark:text-red-500">
+                <span className="font-medium">{error}</span> 
+                
+              </p>
+              }
             <button className="w-full py-3 mt-8 bg-indigo-600 hover:bg-indigo-500 relative text-white">
               Sign In
             </button>

@@ -103,6 +103,12 @@ function classNames(...classes: any) {
 const DefaultHeader = () => {
   const { isAuth, user } = useSelector((store: any) => store.auth as IAuthUser);
   const dispatch = useDispatch();
+  let isAdmin = false;
+  if(isAuth&&user) {
+    for(let i=0;i<user?.roles.length;i++)
+      if(user?.roles[i]==="admin")
+        isAdmin=true;
+  }
 
   const LogoutUser= (e: any) => {
     e.preventDefault();
@@ -214,12 +220,16 @@ const DefaultHeader = () => {
               >
                 Товари
               </Link>
-              <a
-                href="#"
-                className="text-base font-medium text-gray-500 hover:text-gray-900"
-              >
-                Docs
-              </a>
+
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="text-base font-medium text-gray-500 hover:text-gray-900"
+                >
+                  Адмін панель
+                </Link>
+              )}
+
               <Popover className="relative">
                 {({ open }) => (
                   <>
@@ -320,7 +330,8 @@ const DefaultHeader = () => {
                   >
                     {user?.email}
                   </Link>
-                  <Link to="#"
+                  <Link
+                    to="#"
                     onClick={LogoutUser}
                     className="ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                   >

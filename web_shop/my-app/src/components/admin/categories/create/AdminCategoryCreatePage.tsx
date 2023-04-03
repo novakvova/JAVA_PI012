@@ -1,11 +1,11 @@
 import axios from "axios";
 import { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { APP_ENV } from "../../../env";
-import { ICategoryItem } from "../../home/types";
+import { APP_ENV } from "../../../../env";
+import { ICategoryItem } from "../../../home/types";
 import { ICategoryCreate } from "../types";
 
-const CategoryCreatePage = () => {
+const AdminCategoryCreatePage = () => {
   const navigator = useNavigate();
   const [model, setModel] = useState<ICategoryCreate>({
     name: "",
@@ -43,11 +43,11 @@ const CategoryCreatePage = () => {
   const onSubmitHandler= async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-        const result = await axios.post("http://localhost:8081/api/categories", model,
+        const result = await axios.post("http://localhost:8081/api/categories/create", model,
         { 
           headers: {"Content-Type": "multipart/form-data"}
         });
-        navigator("/");
+        navigator("/admin");
     } catch(e: any) {
 
     }
@@ -194,4 +194,4 @@ const CategoryCreatePage = () => {
   );
 };
 
-export default CategoryCreatePage;
+export default AdminCategoryCreatePage;
