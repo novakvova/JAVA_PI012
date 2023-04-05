@@ -32,7 +32,7 @@ public class JwtService {
         var roles = userRoleRepository.findByUser(user);
 
         return Jwts.builder()
-                .setSubject(format("%s,%s", user.getId(), user.getEmail()))
+                .setSubject(format("%s", user.getId()))
                 .claim("email", user.getEmail())
                 //.claim("image", user.getImage())
                 .claim("roles", roles.stream()                                      //витягується списочок ролей, які є у юзера
